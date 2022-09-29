@@ -10,14 +10,15 @@
 }
 
 .title {
-  margin: 0;
+  margin-right: 0%;
   line-height: 1.15;
-  font-size: 4rem;
+  font-size: 3rem;
   text-align: center;
 }
 
 .AppHeader {
   display: flex;
   flex-direction: row;
-  width: 80%;
+  width: 100%;
+  justify-content: space-between;
 }

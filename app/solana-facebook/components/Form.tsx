@@ -1,16 +1,18 @@
 import { FC, useState } from "react";
 import { Profile } from "../models/Profile";
 import styles from "../styles/Form.module.css"
-import { useConnection, useWallet } from "@solana/wallet-adapter-react"
+import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react"
 import * as web3 from "@solana/web3.js"
 import bs58 from "bs58";
+import { SOLANA_FACBOOK_PROGRAM_ID } from "../utils/constants";
+import { AnchorProvider, getProvider, Idl, Program } from "@project-serum/anchor";
+import idl from '../../../target/idl/self_custodial_facebook.json';
+import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet";
 
 export const Form: FC = () => {
 
-    const SOLANA_FACBOOK_PROGRAM_ID =
-        "8wPQ43NMwLTmxvWNCiqdR8hBd8D3K3JiD6AJuETTNi6P";
-
-    const { publicKey, sendTransaction } = useWallet()
+    const wallet = useAnchorWallet()
+    const publicKey = wallet?.publicKey
     const { connection } = useConnection()
 
     const [name, setName] = useState("")
@@ -28,49 +30,21 @@ export const Form: FC = () => {
             alert("Please connect your wallet")
             return
         }
-        const transaction = new web3.Transaction()
-        const [pda, _bump] = await web3.PublicKey.findProgramAddress(
-            [Buffer.from("self-custodial-facebook2"), publicKey.toBuffer()],
-            new web3.PublicKey(SOLANA_FACBOOK_PROGRAM_ID)
-        )
-
-        const buffer = profile.serialize()
-
-        const instruction = new web3.TransactionInstruction({
-            keys: [
-                {
-                    pubkey: publicKey,
-                    isSigner: true,
-                    isWritable: false,
-                },
-                {
-                    pubkey: pda,
-                    isSigner: false,
-                    isWritable: true,
-                },
-                {
-                    pubkey: web3.SystemProgram.programId,
-                    isSigner: false,
-                    isWritable: false,
-                },
-            ],
-            data: buffer,
-            programId: new web3.PublicKey(SOLANA_FACBOOK_PROGRAM_ID)
-        })
-
-        transaction.add(instruction)
+        const provider = new AnchorProvider(connection, wallet, AnchorProvider.defaultOptions())
+        const program = new Program(idl as Idl, SOLANA_FACBOOK_PROGRAM_ID, provider)
         try {
-            let txid = await sendTransaction(transaction, connection)
-            alert(
-                `Transaction submitted: https://explorer.solana.com/tx/${txid}?cluster=devnet`
+            const ix = await program.methods.createFacebook(
+                profile.name,
+                profile.status,
+                profile.twitter,
             )
-            console.log(
-                `Transaction submitted: https://explorer.solana.com/tx/${txid}?cluster=devnet`
-            )
-        } catch (e) {
-            console.log(JSON.stringify(e))
-            alert(JSON.stringify(e))
+            const tx = await ix.rpc()
+            console.log("TXN submitted Successfully-------", tx)
+            alert("Transaction submitted: " + tx)
+        } catch (err) {
+            console.log("Transaction error, ", err)
         }
+
     }
 
     return (

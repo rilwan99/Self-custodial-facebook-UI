@@ -1,27 +1,11 @@
-import { web3 } from '@project-serum/anchor'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
-import { Card } from '../components/Card'
 import { Form } from '../components/Form'
-import { ProfileCoordinator } from '../coordinators/ProfileCoordinator'
-import { Profile } from '../models/Profile'
 import styles from '../styles/Home.module.css'
 import { AppBar } from '../components/AppBar'
+import { AccountList } from '../components/AccountList'
 
 const Home: NextPage = () => {
-
-  // let profileList: Profile[];
-  // profileList = Profile.mocks;
-  const connection = new web3.Connection(web3.clusterApiUrl('devnet'))
-  const [profileList, setProfileList] = useState<Profile[]>([]);
-
-  useEffect(() => {
-    ProfileCoordinator.fetchPage(connection).then(setProfileList)
-    console.log("HIT---------")
-  }, [])
-
 
   return (
     <div className={styles.container}>
@@ -35,21 +19,18 @@ const Home: NextPage = () => {
 
         <AppBar />
 
-
-
         <p className={styles.description}>
           A completely on-chain decentralised social media platform built on <b>Solana </b>
         </p>
 
-        <div className={styles.grid}>
-          {profileList.map((profile, i) => <Card key={i} profile={profile} />)}
-
-        </div>
+        <AccountList />
 
         <p className={styles.subdescription}>
           Create an Account
         </p>
+
         <Form />
+
       </main>
 
       <footer className={styles.footer}>

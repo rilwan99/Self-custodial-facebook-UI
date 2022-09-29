@@ -9,7 +9,7 @@ export const AppBar: FC = () => {
 
 
         <div className={styles.AppHeader}>
-            <Image src="/logo.svg" height={30} width={200} />
+            <Image src="/logo.svg" height={30} width={100} />
             <h2 className={styles.title}>
                 Welcome to <a href="https://www.facebook.com/">Facebook</a> built on Solana
             </h2>

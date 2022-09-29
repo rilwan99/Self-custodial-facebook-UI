@@ -1,9 +1,7 @@
 import bs58 from "bs58";
 import * as web3 from "@solana/web3.js";
 import { Profile } from "../models/Profile";
-
-const SOLANA_FACBOOK_PROGRAM_ID =
-  "8wPQ43NMwLTmxvWNCiqdR8hBd8D3K3JiD6AJuETTNi6P";
+import { SOLANA_FACBOOK_PROGRAM_ID } from "../utils/constants";
 
 export class ProfileCoordinator {
   static accounts: web3.PublicKey[] = [];

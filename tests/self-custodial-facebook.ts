@@ -9,25 +9,25 @@ describe("self-custodial-facebook", () => {
   const program = anchor.workspace
     .SelfCustodialFacebook as Program<SelfCustodialFacebook>;
 
-  it("Creating a new account for user", async () => {
-    const ix = await program.methods.createFacebook(
-      "Deep",
-      "always tinkring",
-      "0xdeep"
-    );
-    const userFacebookAddress = (await ix.pubkeys()).facebookAccount;
-    console.log("User facebook address :: ", userFacebookAddress.toString());
-    // Create user's facebook address
-    const tx = await ix.rpc();
-    console.log("Your transaction signature", tx);
-    // User Details
-    let userDetails = await program.account.facebookAccount.fetch(
-      userFacebookAddress
-    );
-    console.log(
-      `Created a new account with following details \n Name :: ${userDetails.name} \n Status :: ${userDetails.status} \n Twitter :: ${userDetails.twitter}`
-    );
-  });
+  // it("Creating a new account for user", async () => {
+  //   const ix = await program.methods.createFacebook(
+  //     "Deep",
+  //     "always tinkring",
+  //     "0xdeep"
+  //   );
+  //   const userFacebookAddress = (await ix.pubkeys()).facebookAccount;
+  //   console.log("User facebook address :: ", userFacebookAddress.toString());
+  //   // Create user's facebook address
+  //   const tx = await ix.rpc();
+  //   console.log("Your transaction signature", tx);
+  //   // User Details
+  //   let userDetails = await program.account.facebookAccount.fetch(
+  //     userFacebookAddress
+  //   );
+  //   console.log(
+  //     `Created a new account with following details \n Name :: ${userDetails.name} \n Status :: ${userDetails.status} \n Twitter :: ${userDetails.twitter}`
+  //   );
+  // });
 
   // it("Update My Status", async () => {
   //   const ix = await program.methods.updateStatus("&mut self :crab");
@@ -69,23 +69,23 @@ describe("self-custodial-facebook", () => {
   //   }
   // });
 
-  // it("Close My Facebook Account", async () => {
-  //   const ix = await program.methods.deleteAccount();
-  //   const userFacebookAddress = (await ix.pubkeys()).facebookAccount;
-  //   console.log("user facebook address :: ", userFacebookAddress.toString());
-  //   // Create user's facebook address
-  //   const tx = await ix.rpc();
-  //   console.log("Your transaction signature", tx);
-  //   // User Details Not found, 'cuz we closed the account
-  //   try {
-  //     let userDetails = await program.account.facebookAccount.fetch(
-  //       userFacebookAddress
-  //     );
-  //     console.log(
-  //       `Created a new account with following details \n Name :: ${userDetails.name} \n Status :: ${userDetails.status} \n Twitter :: ${userDetails.twitter}`
-  //     );
-  //   } catch {
-  //     console.log("User Details Not found, 'cuz we close the account");
-  //   }
-  // });
+  it("Close My Facebook Account", async () => {
+    const ix = await program.methods.deleteAccount();
+    const userFacebookAddress = (await ix.pubkeys()).facebookAccount;
+    console.log("user facebook address :: ", userFacebookAddress.toString());
+    // Create user's facebook address
+    const tx = await ix.rpc();
+    console.log("Your transaction signature", tx);
+    // User Details Not found, 'cuz we closed the account
+    try {
+      let userDetails = await program.account.facebookAccount.fetch(
+        userFacebookAddress
+      );
+      console.log(
+        `Created a new account with following details \n Name :: ${userDetails.name} \n Status :: ${userDetails.status} \n Twitter :: ${userDetails.twitter}`
+      );
+    } catch {
+      console.log("User Details Not found, 'cuz we close the account");
+    }
+  });
 });
